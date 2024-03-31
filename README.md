@@ -16,17 +16,17 @@ Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManage
 choco feature enable -n allowGlobalConfirmation
 ```
 
-#### Installing Packages
+#### 安裝軟體包
 ```css
 choco install git mariadb visualstudio2022community notepadplusplus
 ```
 
 
-## Install Visual Studio
+## 安裝 Visual Studio
 
-Open `Visual Studio Installer`
+打開 `Visual Studio Installer`
 
-Select Desktop Development with C++ and its following components:
+選擇使用 C++ 及其以下元件進行桌面開發：
 
 - MSVC v143 - VS 2022 C++ x64/x86
 - Just-in-Time-debugger
@@ -36,44 +36,46 @@ Select Desktop Development with C++ and its following components:
 - Windows SDK
 - vcpkg package manager
 
-You can also choose to do the minimal setup if you want, although this is **not recommended**.
+如果需要，您也可以選擇進行最小設置。 **但不建議這樣做**.
 
-Minimal Setup:
+最小設定 :
 
 - MSVC v143 - VS 2022 C++ x64/x86
 - Windows SDK
 
-## Clone rAthena Repository
+## 克隆 rAthena 儲存庫
+
+我們只會克隆主分支，這將節省空間和下載時間
 
 We will only clone the master branch, that will save us space and download time
 
 ```sql
-git clone https://github.com/rathena/rathena.git -b master
+git clone https://github.com/PandasWS/Pandas.git -b master
 ```
 
-## Create Databases and user
+## 建立資料庫和用戶
 
-We access the mariadb console
+我們造訪mariadb控制台
 ```sh
 mysql -u root
 ```
 
-We create the database `rathenadb`
+我們建立資料庫 `rathenadb`
 
 ```sql
 DROP DATABASE IF EXISTS rathenadb;
 CREATE DATABASE IF NOT EXISTS rathenadb DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
 ```
-We create the database `rathenalog`
+我們建立資料庫 `rathenalog`
 
 ```sql
 DROP DATABASE IF EXISTS rathenalog;
 CREATE DATABASE IF NOT EXISTS rathenalog DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
 ```
 
-We create users and grant permissions on the databases `rathenadb` and `rathenalog`
+我們建立使用者並授予資料庫權限 `rathenadb` and `rathenalog`
 
-!!! warning "Remember to change the `froggopass` to anything you want"
+!!! 以下記得將`IDENTIFIED BY 'froggopass'`更改 `froggopass `為您想要的任何內容(為數據庫密碼)
 
 
 ```sql
@@ -83,15 +85,15 @@ GRANT SELECT,INSERT,UPDATE,DELETE,CREATE ON rathenalog.* TO 'rathenadbusr'@'loca
 FLUSH PRIVILEGES;
 ```
 
-We exit the MariaDB console
+我們退出MariaDB控制台
 ```cmd
 exit
 ```
 
-Once the database is created, we can populate it with tables;
+創建資料庫後，我們可以用表填充它；;
 
 ```powershell
-cd rathena/sql-files
+cd Pandas/sql-files
 Get-Content main.sql | mysql -u root rathenadb
 Get-Content web.sql | mysql -u root rathenadb
 Get-Content logs.sql | mysql -u root rathenalog
@@ -116,35 +118,35 @@ Get-Content mob_skill_db_re.sql | mysql -u root rathenadb
 Get-Content mob_skill_db2_re.sql | mysql -u root rathenadb
 ```
 
-### Add S1, P1 and a new admin account 
+### 新增 S1、P1 和新的管理員帳戶
 
-We access the `MariaDB` console again
+我們 `MariaDB` 再次造訪控制台
 ```css
 mysql -u root
 ```
 
-We select the `rathenadb` database
+我們選擇 `rathenadb` 資料庫
 ```css
 use rathenadb
 ```
-We add the user `S1` and the password `P1`
+我們新增用戶 `S1` 和密碼 `P1`   `froggos1`為S1`froggop1`為P1 可更改
 
 ```sql
 UPDATE login set `userid` = "froggos1", `user_pass` = "froggop1" where `account_id` = 1;
 ```
 
-Create a GM Lvl 99 account *(Optional)*.
+建立一個 GM Lvl 99 帳戶。 *（可選）*.
 ```sql
 INSERT INTO `login` VALUES (2000000, 'test', 'test', 'M', 'a@a.com', 99, 0, 0, 0, 0, NULL, '', NULL, 0, '', 0, 0, 0, NULL, 0);
 ```
 
-Exit the MariaDB console
+退出 MariaDB 控制台
 ```cmd
 exit
 ```
-## Conf Folder
+## 進入Pandas資料夾
 
-In `import\inter_conf.txt`
+在 `conf\import\inter_conf.txt`貼上以下代碼 *這裡為連接數據的設定*
 
 ```ruby
 login_server_id: rathenadbusr
@@ -173,14 +175,16 @@ log_db_db: rathenalog
 ```
 
 
-In `import\map_conf.txt`
+在 `conf\import\map_conf.txt` 為設定S1及P1
 
 ```ruby
 userid: froggos1
 passwd: froggop1
 ```
 
-In `import\char_conf.txt`
+在 `conf\import\char_conf.txt` 為設定S1及P1
+
+pincode_enabled: no  是設定是否要開防外掛按鈕密碼  如果要開啟則設定`pincode_enabled: yes`
 
 ```ruby
 userid: froggos1
@@ -191,11 +195,11 @@ pincode_enabled: no
 
 
 
-In `src/custom/defines_pre.hpp`
-We need to declare the packetver in our emulator, and the packetver is based on the RO client of your choosing, in this tutorial, we are using a `2022-04-06` client to connect, so that's what we declare, remember the format `(YYYYMMDD)`
+在 `src/custom/defines_pre.hpp`
+我們需要在模擬器中聲明packetver，而packetver是基於您選擇的RO客戶端的，在本教程中，我們使用 `2022-04-06` 客戶端進行連接，所以這就是我們聲明的內容，記住格式 `(YYYYMMDD)`
 
 ```cpp
 #define PACKETVER 20220406
 ```
 
-!!! warning "Remember to compile and restart server after changing the source code"
+!!! 警告 "修改原始碼後記得編譯並重新啟動伺服器"
