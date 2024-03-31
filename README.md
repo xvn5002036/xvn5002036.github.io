@@ -184,16 +184,21 @@ passwd: froggop1
 
 在 `conf\import\char_conf.txt` 為設定S1及P1
 
-pincode_enabled: no  是設定是否要開防外掛按鈕密碼  如果要開啟則設定`pincode_enabled: yes`
+pincode_enabled: no  是設定是否要開防外掛按鈕密碼，如果要開啟則設定`pincode_enabled: yes`
+char_del_delay:0  是設定刪除角色時需要等待的時間(此設定須配合客戶端登入器的diff)，官方設定`char_del_delay:86400`為24小時
 
 ```ruby
 userid: froggos1
 passwd: froggop1
-
+char_del_delay:0
 pincode_enabled: no
 ```
 
+在 `conf\import\login_conf.txt` 為設定是否使用註冊時小於4個字母的帳號密碼 `new_acc_length_limit:no`代表開啟 關閉則為`new_acc_length_limit:off`
 
+```ruby
+new_acc_length_limit:no
+```
 
 在 `src/custom/defines_pre.hpp`
 我們需要在模擬器中聲明packetver，而packetver是基於您選擇的RO客戶端的，在本教程中，我們使用 `2022-04-06` 客戶端進行連接，所以這就是我們聲明的內容，記住格式 `(YYYYMMDD)`
