@@ -1,17 +1,17 @@
 
-In this tutorial we are going to use **`Chocolatey Package Manager`** to help us install all the needed components witout using the browser to click here, click there, unzip this, unzip that. We are going to use some plain commands, *all righty* ?
+在本教程中，我們將使用它 **`Chocolatey Package Manager`** 來幫助我們安裝所有需要的元件，而無需使用瀏覽器點擊此處，點擊那裡，解壓縮這個，解壓縮那個。我們將使用一些簡單的命令，好嗎？
 
-You can follow the tutorial with [this video on Youtube](https://youtu.be/BWjmgn07VgE).
+您可以按照 [this video on Youtube](https://youtu.be/BWjmgn07VgE).進行操作。
 
-### Install Chocolatey
+### 安裝 Chocolatey
 
-Open a powershell window with admin rights and execute this command;
+開啟具有管理員權限的powershell視窗並執行此命令；
 
 ```powershell
 Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
 ```
 
-#### Disable confirmation for each installation
+#### 停用每次安裝的確認
 ```css
 choco feature enable -n allowGlobalConfirmation
 ```
